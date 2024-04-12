@@ -1,4 +1,4 @@
 AuthType Basic
 AuthName "restricted area"
-AuthUserFile ../lampp/htdocs/sicherspeicher/.htpasswd
+AuthUserFile ../sicherspeicher/.htpasswd
 require valid-user
