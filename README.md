@@ -27,8 +27,6 @@ User Workflow:
 
 Visit the website hosted on your server.
 Click on the "File Upload" button to select files for upload.
-Optionally, enable Monero donation by checking the checkbox and entering your Monero wallet address.
-Click the "Upload" button to start uploading files.
 Monitor the progress bar to track the upload progress.
 Once the upload is complete, you will receive a confirmation message.
 
