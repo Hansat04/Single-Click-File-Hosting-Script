@@ -1,7 +1,11 @@
-Single-Click File Hosting Service
+Single click file hosting service
+Home Page
 ![image](https://github.com/Hansat04/Single-Click-File-Hosting-Script/assets/166753727/8c95aec4-43a2-4e06-8662-be48025b1cfa)
+Uploaded file
 ![image](https://github.com/Hansat04/Single-Click-File-Hosting-Script/assets/166753727/b7fbfaef-c444-4c10-8268-bc5d2950a743)
+Download file area
 ![image](https://github.com/Hansat04/Single-Click-File-Hosting-Script/assets/166753727/fbd424ff-a554-4397-9253-bdfdd9cfbebd)
+Admin area to delete file
 ![image](https://github.com/Hansat04/Single-Click-File-Hosting-Script/assets/166753727/23e09760-563f-4107-a8ba-603ba74931a9)
 
 
