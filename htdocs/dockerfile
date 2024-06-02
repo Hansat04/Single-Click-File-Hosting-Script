@@ -40,7 +40,7 @@ RUN chown www-data:www-data /var/www/html/sicherspeicher/.htpasswd \
     && chmod 644 /var/www/html/sicherspeicher/.htpasswd
 
 # Create an .htpasswd file with an encrypted password
-RUN htpasswd -nbB finn jOkozMUdFS > /var/www/html/sicherspeicher/.htpasswd
+RUN htpasswd -nbB admin admin > /var/www/html/sicherspeicher/.htpasswd
 
 # Expose port 80 for Apache
 EXPOSE 80

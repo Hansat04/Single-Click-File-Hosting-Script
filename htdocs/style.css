@@ -154,7 +154,7 @@ input[type="file"]:hover {
 }
 .bauttona:hover {
   color:grey;
-  
+
 }
 .bauttona {
   color:white;
@@ -241,7 +241,7 @@ input[type="file"] {
   background-color: #4e595d;
   padding: 1rem;
   border-radius: 0.5rem;
-  
+
 }
 .emailbutton:hover{
   background-color: #4e595d1e;
@@ -322,7 +322,7 @@ input[type="file"] {
 .green:hover{
 	background-color:#7FFF00;
 	border-color:#7FFF00;
-	
+
 }
 .yellow:hover{
 	background:#FFD700;

@@ -61,10 +61,12 @@
     <a class="buttona" href="../index.php">HOME</a>
 </p>
 <p><a class="buttona" href="adminpanel2.php">Nächste Seite</a></p>
-<p><a class="buttona" href="update_impressum.php">Bearbeite Impressum</a>
-<a class="buttona" href="update_datenschutz.php">Bearbeite Datenschutzerklärung</a>
+<p><a class="buttona" href="update_impressum.php">Edit Imprint</a>
+<a class="buttona" href="update_datenschutz.php">Edit Privaciy Notice</a>
 <a class="buttona" href="email.php">Abuse Email</a>
-<a class="buttona" href="monero.php">Donation</a></p>
+<a class="buttona" href="monero.php">Donation</a>
+<a class="buttona" href="Deletefiles.php">Delete Old Files</a>
+</p>
 </div>
 </main>
 <footer class="footera">
