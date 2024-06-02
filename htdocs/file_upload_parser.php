@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Define default values if not set
 $csvFile = 'Speicher/hashes.csv'; // CSV file for hash values
 $csvSettingsFile = 'Speicher/settings.csv'; // CSV file for storing settings
@@ -43,7 +46,27 @@ function readSelectedFileTypesFromCsv($csvFile) {
     }
     return $selectedFileTypesData;
 }
+// Function to add file name to CSV file with current date
+function addFileNameToCsv($csvFile, $fileName) {
+    $date = date("Y-m-d"); // Get current date
+    $fileData = array($fileName, $date);
 
+    // Attempt to acquire a lock on the CSV file with 60 tries
+    $lockAttempts = 60;
+    while ($lockAttempts > 0) {
+        $fileHandle = fopen($csvFile, 'a'); // Open CSV file in append mode
+        if (flock($fileHandle, LOCK_EX)) { // Exclusive lock
+            fputcsv($fileHandle, $fileData); // Write data to CSV
+            flock($fileHandle, LOCK_UN); // Release the lock
+            fclose($fileHandle); // Close CSV file
+            return; // Exit the function
+        }
+        $lockAttempts--;
+        usleep(500000); // Sleep for 0.5 seconds between attempts
+    }
+
+    echo "Failed to acquire lock on CSV file after 60 attempts."; // Lock acquisition failed after 60 attempts
+}
 // Function to write settings to CSV file
 function writeSettingsToCsv($csvFile, $settingsData) {
     $file = fopen($csvFile, 'w');
@@ -86,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["file1"])) {
                 $destination = $uploadDir . $randomName;
 
                 // Calculate the hash value of the uploaded file
-                
+
 
                 // Check if the hash value is present in the hashes.csv file
                 $hashesData = hashreadfromSCV($csvFile);
@@ -100,6 +123,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["file1"])) {
                     unlink($tempName);
                     exit(); // Stop further execution
                 }
+                // Add the file name to uploaded_files.csv if statusupload.csv contains "1"
+$statusUploadFile = 'Uploaded_Files/statusupload.csv';
+if (($handle = fopen($statusUploadFile, 'r')) !== false) {
+    $status = fgetcsv($handle)[0]; // Read the first value
+    fclose($handle);
+
+    if ($status == 1) {
+        // Add the file name to uploaded_files.csv
+        $uploadedFilesCsv = 'Uploaded_Files/uploaded_files.csv';
+        addFileNameToCsv($uploadedFilesCsv, $randomName);
+    }
+} else {
+    echo "Error opening statusupload.csv.";
+}
+
                 // Move the uploaded file to the upload directory
                 if (move_uploaded_file($tempName, $destination)) {
                     // Continue with the rest of the code
