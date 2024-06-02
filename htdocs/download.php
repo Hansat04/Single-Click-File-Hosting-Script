@@ -14,6 +14,10 @@
 <body>
     <div class="awasr">
         <?php
+        ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
         // Funktion, um die Dateigröße zu formatieren
         function formatSizeUnits($bytes) {
             $units = array('B', 'KB', 'MB', 'GB', 'TB');
@@ -27,12 +31,77 @@
         $currentDomain = $_SERVER['HTTP_HOST'];
         $disabledFiles = file('disabled_files.txt', FILE_IGNORE_NEW_LINES);
         $csvFileHashes = 'Speicher/hashes.csv'; // CSV file for storing hashes
+        $fileuploadcsv = 'Uploaded_Files/uploaded_files.csv';
+        $statusFile = 'Uploaded_Files/statusupload.csv';
 
         if (strpos($absolutePath, realpath('Files')) !== 0) {
             // Pfad ist nicht im erwarteten Verzeichnis
             die("Unauthorized access");
         }
+// Dateiname aus der URL erhalten und das aktuelle Datum ermitteln
+$filename = basename($downloadFilename);
+$currentDate = date("Y-m-d");
+// Überprüfen, ob in der Datei /Uploaded_Files/statusupload.csv eine 1 steht
+$statusHandle = fopen($statusFile, 'r');
+$status = fgetcsv($statusHandle);
+fclose($statusHandle);
 
+        if ($status[0] == '1') {
+            $maxRetries = 60;
+            $retryDelay = 1; // in seconds
+            $locked = false;
+
+            for ($i = 0; $i < $maxRetries; $i++) {
+                $handle = fopen($fileuploadcsv, "r+");
+                if ($handle && flock($handle, LOCK_EX)) {
+                    $locked = true;
+                    break;
+                }
+                if ($handle) {
+                    fclose($handle);
+                }
+                sleep($retryDelay);
+            }
+
+            if ($locked) {
+                $found = false;
+                $lines = array();
+
+                // Durch die CSV-Datei zeilenweise iterieren
+                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                    // Überprüfen, ob der Dateiname in der CSV-Datei gefunden wurde
+                    if ($data[0] == $filename) {
+                        $found = true;
+                        // Das Datum auf das aktuelle Datum setzen
+                        $data[1] = $currentDate;
+                    }
+                    $lines[] = $data;
+                }
+
+                // Wenn der Dateiname nicht gefunden wurde, füge ihn hinzu
+                if (!$found) {
+                    $lines[] = array($filename, $currentDate);
+                }
+
+                // CSV-Datei schließen und neu öffnen zum Schreiben
+                fclose($handle);
+
+                // Datei zum Schreiben öffnen und erneut sperren
+                $handle = fopen($fileuploadcsv, "w");
+                if ($handle && flock($handle, LOCK_EX)) {
+                    foreach ($lines as $line) {
+                        fputcsv($handle, $line);
+                    }
+                    flock($handle, LOCK_UN);
+                    fclose($handle);
+                }
+            } else {
+                // Fehlerbehandlung: konnte die Datei nicht sperren
+                echo "Fehler: Konnte die Datei nach $maxRetries Versuchen nicht sperren.";
+            }
+        } else {
+            echo "Status ist nicht 1. Vorgang abgebrochen.";
+        }
         if ($downloadFilename) {
             $downloadPath = 'Files/' . $downloadFilename;
 
