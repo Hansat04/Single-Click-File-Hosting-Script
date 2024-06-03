@@ -66,6 +66,7 @@
 <a class="buttona" href="email.php">Abuse Email</a>
 <a class="buttona" href="monero.php">Donation</a>
 <a class="buttona" href="Deletefiles.php">Delete Old Files</a>
+<a class="buttona" href="userportal.php">Userportal</a>
 </p>
 </div>
 </main>

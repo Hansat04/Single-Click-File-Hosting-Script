@@ -1,4 +1,5 @@
 <?php
+session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -73,7 +74,13 @@ function writeSettingsToCsv($csvFile, $settingsData) {
     fputcsv($file, $settingsData);
     fclose($file);
 }
-
+// Function to add file name and username to CSV file
+function addFileNameAndUsernameToCsv($csvFile, $fileName, $username) {
+    $fileData = array($fileName, $username, date("Y-m-d H:i:s")); // Date added
+    $fileHandle = fopen($csvFile, 'a');
+    fputcsv($fileHandle, $fileData);
+    fclose($fileHandle);
+}
 // Function to read hashes from CSV file
 function hashreadfromSCV($csvFile) {
     $settingsData = array();
@@ -140,6 +147,7 @@ if (($handle = fopen($statusUploadFile, 'r')) !== false) {
 
                 // Move the uploaded file to the upload directory
                 if (move_uploaded_file($tempName, $destination)) {
+                    addFileNameAndUsernameToCsv('Uploaded_Files/files.csv', $randomName, $_SESSION['username']);
                     // Continue with the rest of the code
                     $downloadLink = "/download.php?filename=$randomName";
                     $downloadLink2 = "$currentDomain/download.php?filename=$randomName";
