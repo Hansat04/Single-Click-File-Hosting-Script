@@ -130,5 +130,8 @@
             request.send();
         });
     </script>
+    <footer class="footer">
+    <?php include("../templates/footeruser.php"); ?>
+</footer>
 </body>
 </html>

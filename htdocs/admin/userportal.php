@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="robots" content="noindex">
-      <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
     <title>Admin-Seite</title>
     <style>
         body {
@@ -110,6 +110,26 @@
             // Lade den Status aus der CSV-Datei beim Laden der Seite
             loadStatusFromCSV();
 
+            // Funktion zum Speichern des Status in die CSV-Datei
+            function saveStatusToCSV() {
+                // Hier kannst du den Pfad zur CSV-Datei angeben
+                var csvFile = '../Speicher/userportal.csv';
+
+                // Inhalt, der in die CSV-Datei geschrieben werden soll
+                var csvData = (status === 1) ? '1' : '0';
+
+                // Erstelle eine Anfrage, um die CSV-Datei zu aktualisieren
+                var request = new XMLHttpRequest();
+                request.open('POST', 'save_status.php', true);
+                request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                request.onreadystatechange = function() {
+                    if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+                        console.log('Status erfolgreich gespeichert');
+                    }
+                };
+                request.send('status=' + csvData);
+            }
+
             // Eventlistener hinzufügen, um den Status zu ändern, wenn der Knopf gedrückt wird
             toggleButton.addEventListener("click", function() {
                 // Status umschalten
@@ -124,8 +144,8 @@
                 // Aktualisiere die Statusmeldung
                 updateStatusMessage();
 
-                // Hier kannst du den Status an den Server senden, um ihn zu speichern und zu verarbeiten
-                // In diesem Beispiel wird der Status nur lokal geändert und angezeigt
+                // Speichere den neuen Status in der CSV-Datei
+                saveStatusToCSV();
             });
         });
     </script>
