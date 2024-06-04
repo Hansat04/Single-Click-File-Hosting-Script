@@ -147,7 +147,15 @@ input[type="file"]:hover {
   transition: background-color 0.3s ease;
   margin-top: 1.5rem;
 }
-
+.buttonaa {
+  color: white;
+  text-decoration: none;
+  background-color: #ACBF35;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  margin-top: 1.5rem;
+}
 .buttona:hover {
   background-color: rgb(5, 32, 41);
 }

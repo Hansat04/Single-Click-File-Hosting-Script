@@ -25,7 +25,7 @@ header("Refresh:2;index.php");
 	}else 
 {
 	$datei = fopen("../Uploaded_Files/statusupload.csv","w");
-	echo "Datei geöffnet.";
+	echo "0";
 	fputs($datei,"0");
 	fclose($datei);
 }

@@ -100,7 +100,9 @@
                 echo "<p>Du bist nicht angemeldet.</p>";
             }
             ?>
-
+            <p><a class="buttona" href="adminpanel2.php">Zurück</a>
+            <a class="buttona" href="adminpanel4.php">Nächste Seite</a></p>
+            <a class="buttona" href="index.php">HOME</a></p>
             <!-- Ihre anderen Inhalte hier -->
         </div>
     </main>

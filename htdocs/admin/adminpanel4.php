@@ -91,7 +91,7 @@ $additionalFileTypes = array(
 
             <p><a class="buttona" href="adminpanel3.php">Zurück</a>
             <a class="buttona" href="adminpanel5.php">Nächste Seite</a></p>
-            <a class="buttona" href="../index.php">HOME</a>
+            <a class="buttona" href="index.php">HOME</a>
         </div>
     </main>
 

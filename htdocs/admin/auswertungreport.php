@@ -136,10 +136,15 @@ if (isset($_POST['file_select'])) {
 
                 .orange {
                     background-color: orange;
+                     padding: 1.5rem;
                 }
 
                 .black {
                     background-color: black;
+                }
+                .blue{
+                    background-color: blue;
+                     padding: 1.5rem;
                 }
             </style>
 
@@ -188,8 +193,8 @@ if (isset($_POST['file_select'])) {
                         }
                         echo "<button class='red' onclick=\"deleteEntry('{$report['id']}')\">Delete</button>";
                         echo "<button class='green' onclick=\"manageFile('{$report['filename']}')\">Manage File</button>";
-                        echo "<button class='orange' onclick=\"sendMailA('{$report['email']}', '{$report['filename']}', '{$report['case_number']}', '{$report['id']}')\">Mail A</button>";
-                        echo "<button class='black' onclick=\"sendMailB('{$report['email']}', '{$report['filename']}', '{$report['case_number']}', '{$report['id']}')\">Mail B</button>";
+                        echo "<button class='orange' onclick=\"sendMailA('{$report['email']}', '{$report['filename']}', '{$report['case_number']}', '{$report['id']}')\">Mail Accept</button>";
+                        echo "<button class='blue' onclick=\"sendMailB('{$report['email']}', '{$report['filename']}', '{$report['case_number']}', '{$report['id']}')\">Mail Deny</button>";
                         echo "</td>";
                         echo "</tr>";
                     }

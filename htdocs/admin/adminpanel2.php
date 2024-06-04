@@ -136,13 +136,13 @@ fclose($fiasdle);
 			</p>
 			
 <form  action="adminpanel2.php" method="POST" name="">
-<label for="checkboxStatus">Checkbox Status:</label>
+<label for="checkboxStatus">Disable / enabel report form:</label>
                 <input type="checkbox" id="checkboxStatus" name="checkboxStatus" value="1" <?php echo $reportStatusFromFile['checkboxStatus'] == 1 ? 'checked' : ''; ?>>
 			 <input type="submit" name="updateStatus" value="Aktivieren/Deaktivieren">
 </form>
             <p><a class="buttona" href="index.php">Zurück</a>
             <a class="buttona" href="adminpanel3.php">Nächste Seite</a></p>
-            <a class="buttona" href="../index.php">HOME</a></p>
+            <a class="buttona" href="index.php">HOME</a></p>
         </div>
     </main>
 

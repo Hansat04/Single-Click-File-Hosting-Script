@@ -94,7 +94,7 @@ if (is_readable($filesDir)) {
 
 ?>
             <p><a class="buttona" href="adminpanel3.php">Zurück</a>
-            <a class="buttona" href="../index.php">HOME</a></p>
+            <a class="buttona" href="index.php">HOME</a></p>
 			<a class="buttona" href="cordinaten.php">Auswertung</a>
         </div>
 

@@ -195,7 +195,7 @@ if (!file_exists($dowanloadPath)){echo"<div class='alarm'>FILE NOT FOUND</div>";
                 // Display buttons only if the file exists
                 if (file_exists($downloadPath)) {
                     ?>
-                    <form action="admindelete.php" method="post">
+                    <form action="auswertungreport.php" method="post">
                         <input type="hidden" name="filename" value="<?php echo $downloadFilename; ?>">
                         <button type="submit" class="green">OKAY</button>
                     </form>
@@ -237,7 +237,7 @@ if (!file_exists($dowanloadPath)){echo"<div class='alarm'>FILE NOT FOUND</div>";
         </div>
 		<?php
 
-		if (!file_exists($downloadPath)){echo"<div class='cdaiwjd'><a class='buttona' href='adminpanel.php'>ADMIN</a></div>";}
+		if (!file_exists($downloadPath)){echo"<div class='cdaiwjd'><a class='buttona' href='admindelete.php'>ADMIN</a></div>";}
 			
 		?>
     </main>
