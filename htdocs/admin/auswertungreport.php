@@ -54,6 +54,25 @@ function isHashInCSV($hashValue, $csvFile) {
     return in_array($hashValue, $hashes);
 }
 
+function getUserForFile($filename, $csvFile) {
+    // Check if the file belongs to a user by reading the CSV
+    if (!file_exists($csvFile)) {
+        return null;
+    }
+
+    $csvData = file_get_contents($csvFile);
+    $lines = explode(PHP_EOL, $csvData);
+
+    foreach ($lines as $line) {
+        $data = explode(',', $line);
+        if (isset($data[0]) && trim($data[0]) === $filename) {
+            return isset($data[1]) ? trim($data[1]) : null;
+        }
+    }
+
+    return null;
+}
+
 // Get list of available report files
 $reportFiles = glob('../sicherspeicher/report*.csv');
 
@@ -147,11 +166,14 @@ if (isset($_POST['file_select'])) {
                 <?php
                 // Read selected CSV file and display entries in a table
                 $reports = getReports($selectedFile);
+                $userCsvFile = '../Uploaded_Files/files.csv'; // This CSV contains the filename and username
 
                 foreach ($reports as $report) {
                     if (!empty($report['id']) && !empty($report['case_number']) && !empty($report['email']) && !empty($report['filename']) && !empty($report['description']) && !empty($report['reason'])) {
                         $rowClass = ($report['reason'] == 'Child Porno Pornography') ? 'red' : '';
                         $fileDisabled = isFileDisabled($report['filename']);
+                        $username = getUserForFile($report['filename'], $userCsvFile);
+                        $isUserFile = !is_null($username);
 
                         echo "<tr class='$rowClass'>";
                         echo "<td>{$report['id']}</td>";
@@ -161,8 +183,13 @@ if (isset($_POST['file_select'])) {
                         echo "<td>{$report['description']}</td>";
                         echo "<td>{$report['reason']}</td>";
                         echo "<td class='" . ($fileDisabled ? 'greeen' : ($fileFound ? 'orange' : 'black')) . "'>";
+                        if ($isUserFile) {
+                            echo "<input type='checkbox' onclick=\"viewUserData('{$report['filename']}')\"> Nutzerinformationen ansehen";
+                        }
                         echo "<button class='red' onclick=\"deleteEntry('{$report['id']}')\">Delete</button>";
                         echo "<button class='green' onclick=\"manageFile('{$report['filename']}')\">Manage File</button>";
+                        echo "<button class='orange' onclick=\"sendMailA('{$report['email']}', '{$report['filename']}', '{$report['case_number']}', '{$report['id']}')\">Mail A</button>";
+                        echo "<button class='black' onclick=\"sendMailB('{$report['email']}', '{$report['filename']}', '{$report['case_number']}', '{$report['id']}')\">Mail B</button>";
                         echo "</td>";
                         echo "</tr>";
                     }
@@ -207,6 +234,34 @@ if (isset($_POST['file_select'])) {
             document.body.appendChild(form);
 
             form.submit();
+        }
+
+        function viewUserData(filename) {
+            var form = document.createElement("form");
+            form.method = "POST";
+            form.action = "view_userdata.php";
+
+            var input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "filename";
+            input.value = filename;
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+
+            form.submit();
+        }
+
+        function sendMailA(email, filename, caseNumber, id) {
+            var subject = "Delete Request #" + caseNumber + " ID #" + id;
+            var body = "Dear Sir/Madam,\n\n Please be advised that your delete request has been deemed valid for the file: " + filename + "\n\nBest regards,\nAdmin Team";
+            window.location.href = "mailto:" + email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+        }
+
+        function sendMailB(email, filename, caseNumber, id) {
+            var subject = "Delete Request #" + caseNumber + " ID #" + id;
+            var body = "Dear Sir/Madam,\n\n Please be advised that your delete request has been deemed invalid for the file: " + filename + "\n\nBest regards,\nAdmin Team";
+            window.location.href = "mailto:" + email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
         }
     </script>
 
