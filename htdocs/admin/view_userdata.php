@@ -1,7 +1,6 @@
 <?php
 // Turn off error reporting
 
-
 function getUserFiles($username, $csvFile) {
     if (!file_exists($csvFile)) {
         return [];
@@ -43,6 +42,20 @@ function getFileInfo($filename, $csvFile) {
     }
 
     return null;
+}
+
+function calculateAndStoreFileHash($filename) {
+    $filePath = '../Files/' . $filename;
+    if (file_exists($filePath)) {
+        $hash = hash_file('sha256', $filePath);
+        $hashCsvFile = '../Speicher/hashes.csv';
+
+        $fileHandle = fopen($hashCsvFile, 'a');
+        if ($fileHandle) {
+            fputcsv($fileHandle, [$filename, $hash]);
+            fclose($fileHandle);
+        }
+    }
 }
 
 // Get filename from POST request
@@ -90,14 +103,14 @@ if ($filename) {
     foreach ($userFiles as $file) {
         $allFilenames[] = $file['filename'];
     }
-// Collect all IDs and case numbers for inclusion in email subject
-foreach ($userFiles as $file) {
-    $fileInfo = getFileInfo($file['filename'], $reportsCsvFile);
-    if ($fileInfo) {
-        $allIds[] = $fileInfo['id'];
-        $allCaseNumbers[] = $fileInfo['caseNumber'];
+    // Collect all IDs and case numbers for inclusion in email subject
+    foreach ($userFiles as $file) {
+        $fileInfo = getFileInfo($file['filename'], $reportsCsvFile);
+        if ($fileInfo) {
+            $allIds[] = $fileInfo['id'];
+            $allCaseNumbers[] = $fileInfo['caseNumber'];
+        }
     }
-}
 }
 ?>
 
@@ -163,6 +176,10 @@ foreach ($userFiles as $file) {
 
         function deleteUser(username) {
             if (confirm("Sind Sie sicher, dass Sie diesen Benutzer und alle seine Dateien löschen möchten?")) {
+                <?php foreach ($userFiles as $file): ?>
+                    <?php calculateAndStoreFileHash($file['filename']); ?>
+                <?php endforeach; ?>
+
                 var form = document.createElement("form");
                 form.method = "POST";
                 form.action = "delete_user.php";
@@ -179,28 +196,26 @@ foreach ($userFiles as $file) {
             }
         }
 
-function sendMailAll(email, caseNumbers, ids) {
-    // Split the comma-separated values into arrays
-    var caseNumbersArray = caseNumbers.split(",");
-    var idsArray = ids.split(",");
+        function sendMailAll(email, caseNumbers, ids) {
+            // Split the comma-separated values into arrays
+            var caseNumbersArray = caseNumbers.split(",");
+            var idsArray = ids.split(",");
 
-    // Construct the subject
-    var subject = "Delete Request " + caseNumbersArray.join(", #") + ", ID " + idsArray.join(", #");
+            // Construct the subject
+            var subject = "Delete Request " + caseNumbersArray.join(", #") + ", ID " + idsArray.join(", #");
 
-    // If there are no case numbers, remove the leading comma and space
-    if (subject.indexOf("#,") === 13) {
-        subject = subject.slice(0, 12) + subject.slice(13);
-    }
+            // If there are no case numbers, remove the leading comma and space
+            if (subject.indexOf("#,") === 13) {
+                subject = subject.slice(0, 12) + subject.slice(13);
+            }
 
-    // Construct the body
-    var body = "Dear Sir/Madam,\n\nPlease be advised that your delete request has been deemed valid for the following files:\n\n";
-    body += "<?php echo implode(", ", $allFilenames); ?>\n\nBest regards,\nAdmin Team";
+            // Construct the body
+            var body = "Dear Sir/Madam,\n\nPlease be advised that your delete request has been deemed valid for the following files:\n\n";
+            body += "<?php echo implode(", ", $allFilenames); ?>\n\nBest regards,\nAdmin Team";
 
-    // Open the mail client with the subject and body
-    window.location.href = "mailto:" + email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-}
-
+            // Open the mail client with the subject and body
+            window.location.href = "mailto:" + email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+        }
     </script>
-
 </body>
 </html>
